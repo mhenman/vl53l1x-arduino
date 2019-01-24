@@ -1303,27 +1303,8 @@ class VL53L1X
     void setTimeout(uint16_t timeout) { io_timeout = timeout; }
     uint16_t getTimeout() { return io_timeout; }
     bool timeoutOccurred();
-
-  private:
-
-    // The Arduino two-wire interface uses a 7-bit number for the address,
-    // and sets the last bit correctly based on reads and writes
-    static const uint8_t AddressDefault = 0b0101001;
-
-    // value used in measurement timing budget calculations
-    // assumes PresetMode is LOWPOWER_AUTONOMOUS
-    //
-    // vhv = LOWPOWER_AUTO_VHV_LOOP_DURATION_US + LOWPOWERAUTO_VHV_LOOP_BOUND
-    //       (tuning parm default) * LOWPOWER_AUTO_VHV_LOOP_DURATION_US
-    //     = 245 + 3 * 245 = 980
-    // TimingGuard = LOWPOWER_AUTO_OVERHEAD_BEFORE_A_RANGING +
-    //               LOWPOWER_AUTO_OVERHEAD_BETWEEN_A_B_RANGING + vhv
-    //             = 1448 + 2100 + 980 = 4528
-    static const uint32_t TimingGuard = 4528;
-
-    // value in DSS_CONFIG__TARGET_TOTAL_RATE_MCPS register, used in DSS
-    // calculations
-    static const uint16_t TargetRate = 0x0A00;
+  
+  protected:
 
     // for storing values read from RESULT__RANGE_STATUS (0x0089)
     // through RESULT__PEAK_SIGNAL_COUNT_RATE_CROSSTALK_CORRECTED_MCPS_SD0_LOW
@@ -1346,6 +1327,28 @@ class VL53L1X
     // aren't multiple sensors being read at the same time (e.g. on separate
     // I2C buses)
     ResultBuffer results;
+
+  private:
+
+    // The Arduino two-wire interface uses a 7-bit number for the address,
+    // and sets the last bit correctly based on reads and writes
+    static const uint8_t AddressDefault = 0b0101001;
+
+    // value used in measurement timing budget calculations
+    // assumes PresetMode is LOWPOWER_AUTONOMOUS
+    //
+    // vhv = LOWPOWER_AUTO_VHV_LOOP_DURATION_US + LOWPOWERAUTO_VHV_LOOP_BOUND
+    //       (tuning parm default) * LOWPOWER_AUTO_VHV_LOOP_DURATION_US
+    //     = 245 + 3 * 245 = 980
+    // TimingGuard = LOWPOWER_AUTO_OVERHEAD_BEFORE_A_RANGING +
+    //               LOWPOWER_AUTO_OVERHEAD_BETWEEN_A_B_RANGING + vhv
+    //             = 1448 + 2100 + 980 = 4528
+    static const uint32_t TimingGuard = 4528;
+
+    // value in DSS_CONFIG__TARGET_TOTAL_RATE_MCPS register, used in DSS
+    // calculations
+    static const uint16_t TargetRate = 0x0A00;
+
 
     uint8_t address;
 
